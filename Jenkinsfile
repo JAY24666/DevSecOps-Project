@@ -76,10 +76,10 @@ pipeline{
                 // sh "trivy image jay24666/netflix:latest > trivyimage.txt" 
             }
         }
-        // stage('Deploy to container'){
-        //     steps{
-        //         sh 'docker run -d --name netflix -p 8081:80 nasi101/netflix:latest'
-        //     }
-        // }
+        stage('Deploy to container'){
+            steps{
+                sh 'docker run -d --name netflix -p 8081:80 jay24666/netflix:latest'
+            }
+        }
     }
 }
