@@ -46,25 +46,30 @@ pipeline{
         }
         stage('TRIVY FS SCAN') {
             steps {
+            sh 'docker run --rm -v $(pwd):/app aquasec/trivy fs /app | tee trivyfs.txt'
+         }
+        }
+        stage('TRIVY FS SCAN') {
+            steps {
                 sh "trivy fs . > trivyfs.txt"
             }
         }
-        // stage("Docker Build & Push"){
-        //     steps{
-        //         script{
-        //            withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
-        //                sh "docker build --build-arg TMDB_V3_API_KEY=fac06daaa12369b9b55f3f585179dacf -t netflix ."
-        //                sh "docker tag netflix nasi101/netflix:latest "
-        //                sh "docker push nasi101/netflix:latest "
-        //             }
-        //         }
-        //     }
-        // }
-        // stage("TRIVY"){
-        //     steps{
-        //         sh "trivy image nasi101/netflix:latest > trivyimage.txt" 
-        //     }
-        // }
+        stage("Docker Build & Push"){
+            steps{
+                script{
+                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
+                       sh "docker build --build-arg TMDB_V3_API_KEY=fac06daaa12369b9b55f3f585179dacf -t netflix ."
+                       sh "docker tag netflix nasi101/netflix:latest "
+                       sh "docker push nasi101/netflix:latest "
+                    }
+                }
+            }
+        }
+        stage("TRIVY"){
+            steps{
+                sh "trivy image nasi101/netflix:latest > trivyimage.txt" 
+            }
+        }
         // stage('Deploy to container'){
         //     steps{
         //         sh 'docker run -d --name netflix -p 8081:80 nasi101/netflix:latest'
