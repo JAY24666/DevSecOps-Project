@@ -67,7 +67,13 @@ pipeline{
         }
         stage("TRIVY"){
             steps{
-                sh "trivy image nasi101/netflix:latest > trivyimage.txt" 
+                  sh '''
+                    docker run --rm \
+                    -v /var/run/docker.sock:/var/run/docker.sock \
+                    aquasec/trivy image nasi101/netflix:latest | tee trivy-image-scan.txt
+                  '''
+                
+                // sh "trivy image jay24666/netflix:latest > trivyimage.txt" 
             }
         }
         // stage('Deploy to container'){
