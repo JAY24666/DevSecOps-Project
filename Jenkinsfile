@@ -76,9 +76,22 @@ pipeline{
                 // sh "trivy image jay24666/netflix:latest > trivyimage.txt" 
             }
         }
-        stage('Deploy to container'){
-            steps{
-                sh 'docker run -d --name netflix -p 8081:80 jay24666/netflix:latest'
+        // stage('Deploy to container'){
+        //     steps{
+        //         sh 'docker run -d --name netflix -p 8081:80 jay24666/netflix:latest'
+        //     }
+        // }
+
+          stage ("Deploy to cluster dev-kt-k8s") {
+            steps {
+                withKubeConfig(credentialsId: 'kubeconfig-dev-kt-k8s') {
+                    sh "kubectl apply -f DevSecOps-Project\Kubernetes\deployment.yml"
+                    // sh "kubectl apply -f k8s/mysql/"
+                    // sh """
+                    //     sed -i 's#docker.io/jay24666/business-mgmt-app:[0-9]\\+#docker.io/jay24666/business-mgmt-app:${BUILD_NUMBER}#' k8s/app/deployment.yaml
+                    //     kubectl apply -f k8s/app/
+                    // """
+                }
             }
         }
     }
