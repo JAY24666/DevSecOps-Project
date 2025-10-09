@@ -86,7 +86,7 @@ pipeline{
             steps {
                 withKubeConfig(credentialsId: 'kubeconfig-dev-kt-k8s') {
                     sh "kubectl apply -f Kubernetes/deployment.yml"
-                    sh "kubectl apply -f Kubernetes/node-service.yml"
+                    sh "kubectl apply -f Kubernetes/node-service.yaml"
                     sh "kubectl apply -f Kubernetes/service.yml"
                     // sh "kubectl apply -f k8s/mysql/"
                     // sh """
